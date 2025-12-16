@@ -3,14 +3,14 @@
   "name": "liveproject",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://lalit1102.github.io/liveproject/",
   "type": "module",
+  "homepage": "https://lalit1102.github.io/liveproject/",
  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
-  },
+  "dev": "vite",
+  "build": "vite build",
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d dist"
+},
   "dependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
