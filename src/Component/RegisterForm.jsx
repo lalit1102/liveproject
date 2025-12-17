@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
+import { db } from '../../firebase';
+import {addDoc,collection  } from "firebase/firestore";
 
-const UseContext = () => {
-  const [alldata,setAlldata] = useState([])
+const RegisterForm = () => {
+const [alldata,setAlldata] = useState([])
   const [id,setId] = useState("")
   const [data,setData] = useState({
     name:"",
@@ -17,10 +19,12 @@ const UseContext = () => {
     })
   }
 
-  const savedata = (e) => {
-    e.preventDefault()
-    setAlldata([...alldata, data])
+  const savedata = async (e) => {
+    e.preventDefault();
+    await addDoc(collection(db,"lalit"),data)
+    
     setData({ name: "", email: "", password: "" })
+    setId("")
   }
 
 
@@ -28,6 +32,12 @@ const UseContext = () => {
     const res = alldata.filter((i,index)=>id !== index)
     setAlldata(res)
 
+  }
+
+  const editdata = (id) => {
+    const res = alldata.find((i,index)=> id === index)
+    setData(res)
+    setId(id)
   }
   return (
      
@@ -121,4 +131,4 @@ const UseContext = () => {
   );
 };
 
-export default UseContext;
+export default RegisterForm

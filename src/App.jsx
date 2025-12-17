@@ -1,16 +1,15 @@
 // import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
-// import './App.css'
-import UseContext from './Component/UseContext'
-import Live from './Live'
+import './App.css'
+import RegisterForm from './Component/RegisterForm'
+
 
 function App() {
   
   return (
     <>
-      <Live />
-      <UseContext />
+   <RegisterForm />
     </>
   )
 }
