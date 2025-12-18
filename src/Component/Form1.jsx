@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { db } from '../../firebase';
-import {addDoc,collection, onSnapshot,query,deleteDoc,doc  } from "firebase/firestore";
+import React, { useState } from 'react'
 
-const RegisterForm = () => {
-const [alldata,setAlldata] = useState([])
-  // const [id,setId] = useState("")
+const Form1 = () => {
+  const [alldata,setAlldata] = useState([])
   const [data,setData] = useState({
     name:"",
     email:"",
@@ -19,45 +16,12 @@ const [alldata,setAlldata] = useState([])
     })
   }
 
-  useEffect(()=>{
-    const q = query(collection(db,"lalit"));
-    const unsub = onSnapshot(q,(i)=>{
-      let todosArray = [];
-      i.forEach((doc)=>{
-        todosArray.push({...doc.data(),id: doc.id})
-      })
-
-      setAlldata(todosArray);
-    });
-    return () => unsub()
-  },[])
-  const savedata = async (e) => {
-    e.preventDefault();
-    await addDoc(collection(db,"lalit"),data)
+  const savedata = (e) => {
+    e.preventDefault()
+    setAlldata([...alldata,data])
     
-    setData({ name: "", email: "", password: "" })
-    setId("")
-  }
-
-
-  // const deletedata = (id) => {
-  //   const res = alldata.filter((i,index)=>id !== index)
-  //   setAlldata(res)
-
-  // }
-  const deletedata = async(id) => {
-    await deleteDoc(doc(db,"lalit",id))
-  }
-
-  
-
-  const editdata = (id) => {
-    const res = alldata.find((i,index)=> id === index)
-    setData(res)
-    setId(id)
   }
   return (
-     
     <div>
       <form action="#" method="post" name="fnm" onSubmit={savedata}>
         <table>
@@ -127,14 +91,14 @@ const [alldata,setAlldata] = useState([])
             {
               alldata.map((item, index) => {
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{item.name}</td>
                     <td>{item.email}</td>
                     <td>{item.password}</td>
                     <td>
-                      <button onClick={()=>editdata(item.id)}>Edit</button>
-                      <button onClick={()=>deletedata(item.id)}>Delete</button>
+                      <button onClick={()=>editdata(index)}>Edit</button>
+                      <button onClick={()=>deletedata(index)}>Delete</button>
                     </td>
 
                   </tr>
@@ -147,5 +111,6 @@ const [alldata,setAlldata] = useState([])
     </div>
   );
 };
+  
 
-export default RegisterForm
+export default Form1
