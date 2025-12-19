@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../../firebase';
-import {addDoc,collection, onSnapshot,query,deleteDoc,doc  } from "firebase/firestore";
+import {addDoc,collection, onSnapshot,query,deleteDoc,doc, updateDoc,getDoc  } from "firebase/firestore";
 
 const RegisterForm = () => {
 const [alldata,setAlldata] = useState([])
-  // const [id,setId] = useState("")
+  const [id,setId] = useState("")
   const [data,setData] = useState({
     name:"",
     email:"",
@@ -13,6 +13,7 @@ const [alldata,setAlldata] = useState([])
 
   const handleChange = (e) => {
     const {name,value} = e.target
+    console.log("INPUT CHANGE 👉", name, value)
     setData({
       ...data,
       [name]:value
@@ -20,20 +21,40 @@ const [alldata,setAlldata] = useState([])
   }
 
   useEffect(()=>{
+      console.log("🔥 Firestore onSnapshot start")
     const q = query(collection(db,"lalit"));
     const unsub = onSnapshot(q,(i)=>{
       let todosArray = [];
       i.forEach((doc)=>{
         todosArray.push({...doc.data(),id: doc.id})
       })
-
+         console.log("📦 ALL DATA FROM FIRESTORE 👉", todosArray)
       setAlldata(todosArray);
     });
-    return () => unsub()
+    return () =>{
+       console.log("❌ Firestore listener stopped")
+      unsub()
+    }
   },[])
+
+
+
   const savedata = async (e) => {
     e.preventDefault();
-    await addDoc(collection(db,"lalit"),data)
+
+    console.log("SUBMIT DATA 👉", data)
+    console.log("CURRENT ID 👉", id)
+
+
+    if(id !== ""){
+      console.log("✏️ UPDATE MODE")
+      await updateDoc(doc(db,"lalit",id),data)
+       console.log("✅ DATA UPDATED FOR ID 👉", id)
+    } else {
+      console.log("➕ ADD MODE")
+   const a = await addDoc(collection(db,"lalit"),data)
+   console.log("✅ DATA ADDED WITH ID 👉", a)
+    }
     
     setData({ name: "", email: "", password: "" })
     setId("")
@@ -46,15 +67,22 @@ const [alldata,setAlldata] = useState([])
 
   // }
   const deletedata = async(id) => {
+     console.log("🗑 DELETE ID 👉", id)
+
     await deleteDoc(doc(db,"lalit",id))
+    console.log("✅ DATA DELETED 👉", id)
   }
 
   
 
-  const editdata = (id) => {
-    const res = alldata.find((i,index)=> id === index)
-    setData(res)
+  const editdata =async (id) => {
+     console.log("🖊 EDIT CLICKED ID 👉", id)
+    const res = await getDoc(doc(db,"lalit",id))
+     console.log("📄 FETCHED DOC 👉", res.data())
+
+    setData(res.data())
     setId(id)
+     console.log("EDIT MODE ENABLED, FORM FILLED")
   }
   return (
      
@@ -127,7 +155,7 @@ const [alldata,setAlldata] = useState([])
             {
               alldata.map((item, index) => {
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{item.name}</td>
                     <td>{item.email}</td>

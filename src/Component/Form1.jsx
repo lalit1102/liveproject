@@ -91,7 +91,7 @@ const Form1 = () => {
             {
               alldata.map((item, index) => {
                 return (
-                  <tr key={index}>
+                  <tr key={index || id}>
                     <td>{index + 1}</td>
                     <td>{item.name}</td>
                     <td>{item.email}</td>

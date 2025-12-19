@@ -2,16 +2,15 @@
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
-import Form1 from './Component/Form1'
 import RegisterForm from './Component/RegisterForm'
-
+import { MainPage, UserPage } from './Pages'
 
 function App() {
-  
   return (
-    <>
-   <RegisterForm />
-   {/* <Form1 /> */}
+    <> 
+    {/* <MainPage /> */}
+      {/* <UserPage /> */}
+      <RegisterForm />
     </>
   )
 }
